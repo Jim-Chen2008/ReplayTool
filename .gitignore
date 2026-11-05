@@ -1,0 +1,8 @@
+bin/
+obj/
+*.user
+.vs/
+libs/ffmpeg/ffmpeg.exe
+libs/ffmpeg/ffprobe.exe
+libs/ffmpeg/*.dll
+.claude/settings.local.json

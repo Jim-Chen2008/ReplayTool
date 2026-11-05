@@ -1,0 +1,148 @@
+<Window x:Class="ReplayTool.App.Views.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="即时回放设置"
+        Width="640" Height="560"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource WindowBg}"
+        Foreground="{StaticResource TextPrimary}"
+        FontFamily="Microsoft YaHei UI"
+        MinWidth="560" MinHeight="480">
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TabControl Grid.Row="0" Background="{StaticResource PanelBg}" BorderBrush="{StaticResource BorderBrush}">
+            <TabItem Header="回放" Background="Transparent">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="14,10">
+                        <TextBlock Text="回溯时长" Style="{StaticResource LabelStyle}"/>
+                        <ComboBox x:Name="DurationCombo" Style="{StaticResource ComboStyle}"/>
+                        <TextBlock Text="临时缓存目录（优先 SSD，建议与导出盘分离）" Style="{StaticResource LabelStyle}"/>
+                        <DockPanel Margin="0,2,0,12">
+                            <Button Content="浏览…" Width="64" Margin="6,0,0,0" DockPanel.Dock="Right"
+                                    Style="{StaticResource ButtonStyle}" Click="BrowseTemp_Click"/>
+                            <TextBox x:Name="TempDirBox" Style="{StaticResource TextBoxStyle}" Height="26"/>
+                        </DockPanel>
+                        <TextBlock Text="缓存磁盘占用上限（GB）" Style="{StaticResource LabelStyle}"/>
+                        <TextBox x:Name="MaxCacheBox" Style="{StaticResource TextBoxStyle}" Height="26" Margin="0,2,0,12"/>
+                        <TextBlock Text="磁盘预警阈值（GB，低于该值停止缓存并提示）" Style="{StaticResource LabelStyle}"/>
+                        <TextBox x:Name="DiskWarnBox" Style="{StaticResource TextBoxStyle}" Height="26" Margin="0,2,0,4"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem Header="视频" Background="Transparent">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="14,10">
+                        <TextBlock Text="录制分辨率" Style="{StaticResource LabelStyle}"/>
+                        <ComboBox x:Name="ResolutionCombo" Style="{StaticResource ComboStyle}"/>
+                        <TextBlock Text="帧率" Style="{StaticResource LabelStyle}"/>
+                        <ComboBox x:Name="FramerateCombo" Style="{StaticResource ComboStyle}"/>
+                        <TextBlock Text="码率档位" Style="{StaticResource LabelStyle}"/>
+                        <DockPanel Margin="0,2,0,4">
+                            <TextBox x:Name="CustomBitrateBox" Style="{StaticResource TextBoxStyle}" Width="90"
+                                     Height="26" DockPanel.Dock="Right" IsEnabled="False" Margin="8,0,0,0"/>
+                            <ComboBox x:Name="BitrateCombo" Style="{StaticResource ComboStyle}"/>
+                        </DockPanel>
+                        <TextBlock Text="编码格式（自动=硬件优先，H.265 体积更小）" Style="{StaticResource LabelStyle}"/>
+                        <ComboBox x:Name="EncoderCombo" Style="{StaticResource ComboStyle}"/>
+                        <CheckBox x:Name="HdrCheck" Content="启用 HDR 录制（需显卡与显示器支持）"
+                                  Style="{StaticResource CheckBoxStyle}"/>
+                        <Separator Margin="0,12"/>
+                        <TextBlock Text="画面增强（对标 N 卡滤镜）" Style="{StaticResource LabelStyle}"/>
+                        <TextBlock Text="锐化强度 0-100" Style="{StaticResource LabelStyle}"/>
+                        <Slider x:Name="SharpnessSlider" Minimum="0" Maximum="100" Margin="0,2,0,10"/>
+                        <TextBlock Text="对比度 -50 ~ +50" Style="{StaticResource LabelStyle}"/>
+                        <Slider x:Name="ContrastSlider" Minimum="-50" Maximum="50" Margin="0,2,0,10"/>
+                        <CheckBox x:Name="ColorEnhanceCheck" Content="游戏色彩增强" Style="{StaticResource CheckBoxStyle}"/>
+                        <CheckBox x:Name="BrightnessCheck" Content="暗部提亮" Style="{StaticResource CheckBoxStyle}"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem Header="音频" Background="Transparent">
+                <StackPanel Margin="14,10">
+                    <CheckBox x:Name="SystemAudioCheck" Content="录制系统声音（WASAPI 环路捕获）"
+                              Style="{StaticResource CheckBoxStyle}"/>
+                    <CheckBox x:Name="MicCheck" Content="录制麦克风" Style="{StaticResource CheckBoxStyle}"/>
+                    <TextBlock Text="麦克风增益 %" Style="{StaticResource LabelStyle}"/>
+                    <Slider x:Name="MicGainSlider" Minimum="0" Maximum="300" Margin="0,2,0,10"/>
+                    <CheckBox x:Name="NoiseSuppressionCheck" Content="麦克风降噪（实验性：高通滤波）"
+                              Style="{StaticResource CheckBoxStyle}"/>
+                    <ComboBox x:Name="AudioTrackCombo" Style="{StaticResource ComboStyle}" Margin="0,6,0,0"/>
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Header="快捷键" Background="Transparent">
+                <StackPanel Margin="14,10">
+                    <TextBlock Text="点击「改键」后按下新快捷键；点击「清空」禁用该热键。"
+                               Style="{StaticResource HintStyle}" Margin="0,0,0,10"/>
+                    <TextBlock x:Name="CaptureHint" Text="" Style="{StaticResource WarnStyle}" Margin="0,0,0,8"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="保存回放" Style="{StaticResource LabelStyle}" VerticalAlignment="Center" Margin="0,6"/>
+                        <TextBlock x:Name="SaveReplayDisplay" Grid.Column="1" Style="{StaticResource KeyDisplayStyle}"/>
+                        <Button x:Name="SaveReplayRebind" Grid.Column="2" Content="改键" Style="{StaticResource ButtonStyle}" Margin="4,4"/>
+                        <Button x:Name="SaveReplayClear" Grid.Column="3" Content="清空" Style="{StaticResource GhostButtonStyle}" Margin="4,4"/>
+
+                        <TextBlock Grid.Row="1" Text="手动录制" Style="{StaticResource LabelStyle}" VerticalAlignment="Center" Margin="0,6"/>
+                        <TextBlock x:Name="ManualRecordDisplay" Grid.Row="1" Grid.Column="1" Style="{StaticResource KeyDisplayStyle}"/>
+                        <Button x:Name="ManualRecordRebind" Grid.Row="1" Grid.Column="2" Content="改键" Style="{StaticResource ButtonStyle}" Margin="4,4"/>
+                        <Button x:Name="ManualRecordClear" Grid.Row="1" Grid.Column="3" Content="清空" Style="{StaticResource GhostButtonStyle}" Margin="4,4"/>
+
+                        <TextBlock Grid.Row="2" Text="截图" Style="{StaticResource LabelStyle}" VerticalAlignment="Center" Margin="0,6"/>
+                        <TextBlock x:Name="ScreenshotDisplay" Grid.Row="2" Grid.Column="1" Style="{StaticResource KeyDisplayStyle}"/>
+                        <Button x:Name="ScreenshotRebind" Grid.Row="2" Grid.Column="2" Content="改键" Style="{StaticResource ButtonStyle}" Margin="4,4"/>
+                        <Button x:Name="ScreenshotClear" Grid.Row="2" Grid.Column="3" Content="清空" Style="{StaticResource GhostButtonStyle}" Margin="4,4"/>
+
+                        <TextBlock Grid.Row="3" Text="呼出设置" Style="{StaticResource LabelStyle}" VerticalAlignment="Center" Margin="0,6"/>
+                        <TextBlock x:Name="OpenPanelDisplay" Grid.Row="3" Grid.Column="1" Style="{StaticResource KeyDisplayStyle}"/>
+                        <Button x:Name="OpenPanelRebind" Grid.Row="3" Grid.Column="2" Content="改键" Style="{StaticResource ButtonStyle}" Margin="4,4"/>
+                        <Button x:Name="OpenPanelClear" Grid.Row="3" Grid.Column="3" Content="清空" Style="{StaticResource GhostButtonStyle}" Margin="4,4"/>
+                    </Grid>
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Header="高级" Background="Transparent">
+                <StackPanel Margin="14,10">
+                    <CheckBox x:Name="AutoStartCheck" Content="开机自动启动" Style="{StaticResource CheckBoxStyle}"/>
+                    <CheckBox x:Name="AutoRecordCheck" Content="启动后立即开始回放录制" Style="{StaticResource CheckBoxStyle}"/>
+                    <CheckBox x:Name="OverlayCheck" Content="显示录制状态指示器" Style="{StaticResource CheckBoxStyle}"/>
+                    <CheckBox x:Name="BatteryCheck" Content="电池模式下自动暂停回放" Style="{StaticResource CheckBoxStyle}"/>
+                    <Separator Margin="0,10"/>
+                    <TextBlock x:Name="EncoderInfoText" Style="{StaticResource HintStyle}"/>
+                    <TextBlock x:Name="FfmpegInfoText" Style="{StaticResource HintStyle}"/>
+                    <TextBlock x:Name="StatusInfoText" Style="{StaticResource HintStyle}"/>
+                    <Separator Margin="0,10"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                        <Button Content="打开导出目录" Style="{StaticResource ButtonStyle}" Click="OpenExportDir_Click"/>
+                        <Button Content="打开缓存目录" Style="{StaticResource ButtonStyle}" Margin="8,0,0,0" Click="OpenTempDir_Click"/>
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+
+        <DockPanel Grid.Row="1" Margin="0,10,0,0">
+            <Button Content="保存并应用" Width="110" Height="30" DockPanel.Dock="Right"
+                    Style="{StaticResource PrimaryButtonStyle}" Click="Save_Click"/>
+            <Button Content="取消" Width="80" Height="30" Margin="0,0,8,0" DockPanel.Dock="Right"
+                    Style="{StaticResource GhostButtonStyle}" Click="Cancel_Click"/>
+            <TextBlock x:Name="SaveResultText" VerticalAlignment="Center" Foreground="{StaticResource SuccessBrush}"/>
+        </DockPanel>
+    </Grid>
+</Window>

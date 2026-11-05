@@ -1,0 +1,20 @@
+<Window x:Class="ReplayTool.App.Views.OverlayWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ReplayOverlay"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        Topmost="True"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Width="36" Height="36"
+        IsHitTestVisible="False"
+        WindowStartupLocation="Manual">
+    <Grid>
+        <Ellipse x:Name="Dot" Width="12" Height="12"
+                 Fill="#2ECC71"
+                 Stroke="White" StrokeThickness="1.5"
+                 RenderOptions.EdgeMode="Aliased"/>
+    </Grid>
+</Window>
